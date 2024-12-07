@@ -30,6 +30,23 @@ export class AuthService {
     };
   }
 
+  async refreshToken(id: string, refreshToken: string) {
+    const user = await this.usersService.findOne(id);
+
+    if (!user || !user.refreshToken || user.refreshToken !== refreshToken) {
+      throw new UnauthorizedException("Invalid token");
+    }
+
+    const payload = { sub: user.id, username: user.username };
+
+    const tokens = await this.getToken(payload);
+
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    };
+  }
+
   async getToken(payload: { sub: string; username: string }) {
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: appConfig().accessSecret,

@@ -7,6 +7,7 @@ import {
 import helmet from "helmet";
 
 import { AppModule } from "./app.module";
+import { ResponseFormatInterceptor } from "./interceptors/response.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,8 @@ async function bootstrap() {
   app.use(helmet());
 
   app.enableCors();
+
+  app.useGlobalInterceptors(new ResponseFormatInterceptor(new Reflector()));
 
   const config = new DocumentBuilder()
     .setTitle("CollabDocs Api")
