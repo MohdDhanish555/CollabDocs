@@ -1,11 +1,18 @@
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter, Navigate, Outlet } from "react-router";
 
 import Login from "../Components/Auth/Login";
 import SignUp from "../Components/Auth/SignUp";
+import { AuthenticatedRoute, UnAuthenticatedRoute } from "./Authentication";
+import Home from "../Components/Home/Home";
 
 const routes = createBrowserRouter([
   {
     path: "/auth",
+    element: (
+      <UnAuthenticatedRoute>
+        <Outlet />
+      </UnAuthenticatedRoute>
+    ),
     children: [
       {
         index: true,
@@ -23,7 +30,19 @@ const routes = createBrowserRouter([
   },
   {
     path: "/app",
-    element: <>Home</>,
+    element: (
+      <AuthenticatedRoute>
+        <Home />
+      </AuthenticatedRoute>
+    ),
+  },
+  {
+    path: "/",
+    element: <Navigate to="/app" replace />,
+  },
+  {
+    path: "*",
+    element: <Navigate to="/app" replace />,
   },
 ]);
 

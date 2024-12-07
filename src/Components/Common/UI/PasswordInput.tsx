@@ -12,6 +12,7 @@ type Props = {
   placeholder?: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  helperText?: string;
   id?: string;
   sx?: SxProps<Theme>;
 };
@@ -20,6 +21,7 @@ const PasswordInput = ({
   placeholder = "Password",
   value,
   onChange,
+  helperText,
   id = "password",
   sx,
 }: Props) => {
@@ -35,6 +37,7 @@ const PasswordInput = ({
       value={value}
       onChange={onChange}
       type={showPassword ? "text" : "password"}
+      helperText={helperText || ""}
       slotProps={{
         input: {
           endAdornment: (
