@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { errorToastMessage } from "../../utils/toast";
-import { http } from "../../utils/http";
+import http from "../../utils/http";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        await http.get("/users/");
+        await http.get("/users/profile");
         setLoading(false);
       } catch (err) {
         errorToastMessage(err as Error);

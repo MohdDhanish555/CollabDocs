@@ -19,7 +19,7 @@ import { FullScreenCenteredContainer } from "../Common/styles/common";
 
 import PasswordInput from "../Common/UI/PasswordInput";
 import { NavLink, useNavigate } from "react-router";
-import { http } from "../../utils/http";
+import http from "../../utils/http";
 
 const schema = yup.object({
   username: yup.string().required("Username is required"),

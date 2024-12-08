@@ -18,7 +18,7 @@ import { AuthCard } from "./auth.style";
 import { FullScreenCenteredContainer } from "../Common/styles/common";
 import PasswordInput from "../Common/UI/PasswordInput";
 import { errorToastMessage, toastMessage } from "../../utils/toast";
-import { http } from "../../utils/http";
+import http from "../../utils/http";
 import { useAppDispatch } from "../../Redux/hooks";
 import { setUserAuth } from "../../Redux/reducers/userSlice";
 
