@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { errorToastMessage } from "../../utils/toast";
 import http from "../../utils/http";
 
-const Home = () => {
+const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const Home = () => {
     fetchData();
   }, [setLoading]);
 
-  return <div>{loading ? "Loading..." : "Home"}</div>;
+  return <div>{loading ? "Loading..." : "Dashboard"}</div>;
 };
 
-export default Home;
+export default Dashboard;

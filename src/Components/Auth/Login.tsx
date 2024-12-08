@@ -21,6 +21,7 @@ import { errorToastMessage, toastMessage } from "../../utils/toast";
 import http from "../../utils/http";
 import { useAppDispatch } from "../../Redux/hooks";
 import { setUserAuth } from "../../Redux/reducers/userSlice";
+import { jwtDecode } from "jwt-decode";
 
 const schema = yup.object({
   username: yup.string().required("Username is required"),
@@ -44,11 +45,22 @@ const Login = () => {
     try {
       setSubmitLoader(true);
       const res: AxiosResponse = await http.post("/auth/login", values);
-      const data = res.data?.data;
-      localStorage.setItem("collabdocs-access-token", data?.accessToken);
-      localStorage.setItem("collabdocs-refresh-token", data?.refreshToken);
 
-      dispatch(setUserAuth({ authenticated: true }));
+      const data = res.data?.data;
+      const accessToken = data?.accessToken;
+      const refreshToken = data?.refreshToken;
+      const decoded: any = jwtDecode(accessToken);
+
+      localStorage.setItem("collabdocs-access-token", accessToken);
+      localStorage.setItem("collabdocs-refresh-token", refreshToken);
+
+      dispatch(
+        setUserAuth({
+          authenticated: true,
+          userId: decoded?.sub,
+          userName: decoded?.username,
+        })
+      );
 
       toastMessage("success", res.data?.message);
       setSubmitLoader(false);

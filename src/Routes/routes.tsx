@@ -3,7 +3,8 @@ import { createBrowserRouter, Navigate, Outlet } from "react-router";
 import Login from "../Components/Auth/Login";
 import SignUp from "../Components/Auth/SignUp";
 import { AuthenticatedRoute, UnAuthenticatedRoute } from "./Authentication";
-import Home from "../Components/Home/Home";
+import AppLayout from "../Components/Layout/AppLayout";
+import Dashboard from "../Components/Dashboard/Dashboard";
 
 const routes = createBrowserRouter([
   {
@@ -29,20 +30,26 @@ const routes = createBrowserRouter([
     ],
   },
   {
-    path: "/app",
+    path: "/dashboard",
     element: (
       <AuthenticatedRoute>
-        <Home />
+        <AppLayout />
       </AuthenticatedRoute>
     ),
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+    ],
   },
   {
     path: "/",
-    element: <Navigate to="/app" replace />,
+    element: <Navigate to="/dashboard" replace />,
   },
   {
     path: "*",
-    element: <Navigate to="/app" replace />,
+    element: <Navigate to="/dashboard" replace />,
   },
 ]);
 
