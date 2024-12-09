@@ -30,7 +30,7 @@ const routes = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard",
+    path: "/",
     element: (
       <AuthenticatedRoute>
         <AppLayout />
@@ -39,17 +39,17 @@ const routes = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Navigate to="/dashboard" replace />,
+      },
+      {
+        path: "dashboard",
         element: <Dashboard />,
       },
     ],
   },
   {
-    path: "/",
-    element: <Navigate to="/dashboard" replace />,
-  },
-  {
     path: "*",
-    element: <Navigate to="/dashboard" replace />,
+    element: <Navigate to="/" replace />,
   },
 ]);
 

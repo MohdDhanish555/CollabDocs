@@ -19,7 +19,7 @@ export const UnAuthenticatedRoute: React.FC<any> = ({ children }) => {
   const { isUserAuthenticated } = useAppSelector((state) => state.user);
 
   if (isUserAuthenticated) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/" />;
   }
 
   return <>{children}</>;
