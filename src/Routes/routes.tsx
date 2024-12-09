@@ -5,6 +5,7 @@ import SignUp from "../Components/Auth/SignUp";
 import { AuthenticatedRoute, UnAuthenticatedRoute } from "./Authentication";
 import AppLayout from "../Components/Layout/AppLayout";
 import Dashboard from "../Components/Dashboard/Dashboard";
+import Editor from "../Components/Editor/Editor";
 
 const routes = createBrowserRouter([
   {
@@ -44,6 +45,19 @@ const routes = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "document",
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/" replace />,
+          },
+          {
+            path: ":id",
+            element: <Editor />,
+          },
+        ],
       },
     ],
   },

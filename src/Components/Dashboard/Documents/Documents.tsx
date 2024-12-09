@@ -14,9 +14,11 @@ import http from "../../../utils/http";
 import DocumentCard from "./DocumentCard";
 import { ReceiptLong } from "@mui/icons-material";
 import { Document } from "./documents.type";
+import { useNavigate } from "react-router";
 
 const Documents = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { documents, loading } = useAppSelector((state) => state.dashboard);
 
   useEffect(() => {
@@ -41,12 +43,22 @@ const Documents = () => {
     fetchData();
   }, [dispatch]);
 
+  const handleNavigate = (docId: string) => {
+    navigate(`/document/${docId}`);
+  };
+
   return (
     <Stack gap={2} sx={{ pt: 2 }}>
       {loading ? (
         <DocumentsLoader />
       ) : documents?.length ? (
-        documents.map((doc: any) => <DocumentCard key={doc?.id} doc={doc} />)
+        documents.map((doc: any) => (
+          <DocumentCard
+            key={doc?.id}
+            doc={doc}
+            handleNavigate={handleNavigate}
+          />
+        ))
       ) : (
         <Box
           sx={{

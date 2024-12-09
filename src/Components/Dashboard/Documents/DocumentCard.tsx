@@ -3,12 +3,13 @@ import { DocumentCardProps } from "./documents.type";
 import { Box, Card, CardActionArea, Stack, Typography } from "@mui/material";
 import { DocumentIcon } from "./Icons";
 
-const DocumentCard = ({ doc }: DocumentCardProps) => {
+const DocumentCard = ({ doc, handleNavigate }: DocumentCardProps) => {
   return (
     <Card
       sx={{
         height: "100px",
       }}
+      onClick={() => handleNavigate(doc?.id)}
     >
       <CardActionArea sx={{ height: "inherit" }}>
         <Box

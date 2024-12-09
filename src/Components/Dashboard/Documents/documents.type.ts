@@ -7,4 +7,5 @@ export type Document = {
 
 export type DocumentCardProps = {
   doc: Document;
+  handleNavigate: (id: string) => void;
 };
