@@ -1,9 +1,11 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import userSlice from "./reducers/userSlice";
+import dashboardSlice from "./reducers/dashboardSlice";
 
 export const store = configureStore({
   reducer: {
     user: userSlice,
+    dashboard: dashboardSlice,
   },
 });
 

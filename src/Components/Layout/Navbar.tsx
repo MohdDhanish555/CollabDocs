@@ -34,16 +34,17 @@ const Navbar = () => {
       <AppBar sx={{ position: "sticky", borderRadius: 2.5 }}>
         <Toolbar>
           <Typography
-            variant="h5"
+            variant="h4"
             noWrap
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontWeight: 700,
               letterSpacing: ".3rem",
+              textTransform: "uppercase",
             }}
           >
-            COLLABDOCS
+            CollabDocs
           </Typography>
           <Box sx={{ ml: "auto" }}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

@@ -1,13 +1,16 @@
 import React from "react";
 import { Outlet } from "react-router";
 import Navbar from "./Navbar";
+import { Box, Stack } from "@mui/material";
 
 const AppLayout = () => {
   return (
-    <div>
+    <Stack sx={{ height: "100%" }}>
       <Navbar />
-      <Outlet />
-    </div>
+      <Box sx={{ flex: 1 }}>
+        <Outlet />
+      </Box>
+    </Stack>
   );
 };
 
