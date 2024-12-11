@@ -1,20 +1,25 @@
-import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router";
-import http from "../../utils/http";
 import { AxiosResponse } from "axios";
+
+import http from "../../utils/http";
 import { errorToastMessage } from "../../utils/toast";
 
 const DocumentHeader = () => {
   const navigate = useNavigate();
+  const [buttonLoader, setButtonLoader] = useState(false);
 
   const handleStartButton = async () => {
     try {
+      setButtonLoader(true);
       const res: AxiosResponse = await http.post("/documents/create");
+      setButtonLoader(false);
       navigate(`/document/${res.data?.data?.id}`);
     } catch (error) {
       errorToastMessage(error as Error);
+      setButtonLoader(false);
     }
   };
 
@@ -32,7 +37,13 @@ const DocumentHeader = () => {
       <Box sx={{ ml: "auto" }}>
         <Button
           onClick={handleStartButton}
-          startIcon={<Add />}
+          startIcon={
+            buttonLoader ? (
+              <CircularProgress size={18} color="inherit" />
+            ) : (
+              <Add />
+            )
+          }
           variant="contained"
           color="secondary"
         >
