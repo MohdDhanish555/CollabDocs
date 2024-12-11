@@ -7,7 +7,7 @@ const AppLayout = () => {
   return (
     <Stack sx={{ height: "100%" }}>
       <Navbar />
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1, minHeight: "1px" }}>
         <Outlet />
       </Box>
     </Stack>

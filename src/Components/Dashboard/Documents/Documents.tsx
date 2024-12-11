@@ -1,6 +1,11 @@
-import React, { useEffect } from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { useEffect, useRef } from "react";
+import { Box, Typography } from "@mui/material";
+import { ReceiptLong } from "@mui/icons-material";
 import { DateTime } from "luxon";
+import { AxiosResponse } from "axios";
+import { useNavigate } from "react-router";
+
+import { DocumentsWrapper, EmptyDataContainer } from "../dashboard.style";
 
 import DocumentsLoader from "./Loader";
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
@@ -9,17 +14,16 @@ import {
   setLoading,
 } from "../../../Redux/reducers/dashboardSlice";
 import { errorToastMessage } from "../../../utils/toast";
-import { AxiosResponse } from "axios";
 import http from "../../../utils/http";
 import DocumentCard from "./DocumentCard";
-import { ReceiptLong } from "@mui/icons-material";
 import { Document } from "./documents.type";
-import { useNavigate } from "react-router";
+import Navigators from "./Navigators/Navigators";
 
 const Documents = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { documents, loading } = useAppSelector((state) => state.dashboard);
+  const targetRef = useRef<any>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,7 +52,8 @@ const Documents = () => {
   };
 
   return (
-    <Stack gap={2} sx={{ pt: 2 }}>
+    <Box sx={DocumentsWrapper} ref={targetRef}>
+      <Box id="back-to-top-anchor" />
       {loading ? (
         <DocumentsLoader />
       ) : documents?.length ? (
@@ -60,22 +65,15 @@ const Documents = () => {
           />
         ))
       ) : (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 1,
-            py: 4,
-          }}
-        >
+        <Box sx={EmptyDataContainer}>
           <ReceiptLong sx={{ color: "text.disabled" }} />
           <Typography variant="subtitle1" color="text.disabled">
             No documents found
           </Typography>
         </Box>
       )}
-    </Stack>
+      <Navigators targetRef={targetRef} />
+    </Box>
   );
 };
 

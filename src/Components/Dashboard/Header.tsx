@@ -19,7 +19,15 @@ const DocumentHeader = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+    <Box
+      sx={{
+        height: "70px",
+        display: "flex",
+        alignItems: "center",
+        pt: 2,
+        pb: 4,
+      }}
+    >
       <Typography variant="h2">All documents</Typography>
       <Box sx={{ ml: "auto" }}>
         <Button

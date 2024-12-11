@@ -7,11 +7,12 @@ const DocumentCard = ({ doc, handleNavigate }: DocumentCardProps) => {
   return (
     <Card
       sx={{
-        height: "100px",
+        height: "100px !important",
+        overflow: "visible",
       }}
       onClick={() => handleNavigate(doc?.id)}
     >
-      <CardActionArea sx={{ height: "inherit" }}>
+      <CardActionArea sx={{ height: "100px" }}>
         <Box
           sx={{
             display: "flex",
