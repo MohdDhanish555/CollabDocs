@@ -1,4 +1,5 @@
 {
   "FIND_ALL": "Users list fetched successfully",
-  "CREATE_SUCCESS": "User created successfully"
+  "CREATE_SUCCESS": "User created successfully",
+  "GET_PROFILE": "User profile fetched successfully"
 }

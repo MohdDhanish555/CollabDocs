@@ -5,6 +5,7 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { sequelizeConfig } from "./config/sequelize.config";
 import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
+import { DocumentsModule } from './modules/documents/documents.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from "./modules/auth/auth.module";
     SequelizeModule.forRootAsync(sequelizeConfig),
     UsersModule,
     AuthModule,
+    DocumentsModule,
   ],
   controllers: [],
   providers: [],
