@@ -25,20 +25,22 @@ const RightPanel = () => {
     socket.on("usersUpdated", (users) => {
       setActiveUsers(users);
     });
-
-    return () => {
-      socket.emit("leaveRoom", { documentId, userId });
-    };
   }, [documentId, userId]);
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
+    const leaveRoom = () => {
       socket.emit("leaveRoom", { documentId, userId });
     };
 
+    // Handle tab/browser close
+    const handleBeforeUnload = () => {
+      leaveRoom();
+    };
     window.addEventListener("beforeunload", handleBeforeUnload);
 
+    // Clean up on component unmount
     return () => {
+      leaveRoom();
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [documentId, userId]);
