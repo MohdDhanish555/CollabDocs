@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import { Avatar, AvatarGroup, Box } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
@@ -6,17 +6,11 @@ import { deepOrange } from "@mui/material/colors";
 import { useAppSelector } from "../../Redux/hooks";
 import socket from "../../utils/socketService";
 import Comments from "./Comments";
+import ShareAccess from "./ShareAccess";
 
-interface User {
-  id: string;
-  username: string;
-}
-
-const RightPanel = () => {
+const RightPanel = ({ activeUsers, setActiveUsers }: any) => {
   const userId = useAppSelector((state) => state.user.userId);
-  const [activeUsers, setActiveUsers] = useState<User[]>([
-    { id: userId, username: "You" },
-  ]);
+
   const { id: documentId } = useParams();
 
   useEffect(() => {
@@ -25,7 +19,11 @@ const RightPanel = () => {
     socket.on("usersUpdated", (users) => {
       setActiveUsers(users);
     });
-  }, [documentId, userId]);
+
+    return () => {
+      socket.off("usersUpdated");
+    };
+  }, [documentId, userId, setActiveUsers]);
 
   useEffect(() => {
     const leaveRoom = () => {
@@ -46,36 +44,36 @@ const RightPanel = () => {
   }, [documentId, userId]);
 
   return (
-    <Box
-      sx={{
-        height: "100%",
-        minHeight: "450px",
-        width: "350px",
-        bgcolor: "#7091e6",
-        borderRadius: "16px",
-        p: 1.5,
-      }}
-    >
+    <>
       <Box
         sx={{
-          // bgcolor: "lightgray",
-          display: "flex",
-          alignItems: "center",
+          height: "100%",
+          minHeight: "450px",
+          width: "350px",
+          p: 1.5,
         }}
       >
-        <AvatarGroup max={4}>
-          {activeUsers.map((user) => (
-            <Avatar
-              key={user?.id}
-              sx={{ textTransform: "capitalize", bgcolor: deepOrange[500] }}
-            >
-              {user?.username?.charAt(0)}
-            </Avatar>
-          ))}
-        </AvatarGroup>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <AvatarGroup max={4}>
+            {activeUsers.map((user: any) => (
+              <Avatar
+                key={user?.id}
+                sx={{ textTransform: "capitalize", bgcolor: deepOrange[500] }}
+              >
+                {user?.username?.charAt(0)}
+              </Avatar>
+            ))}
+          </AvatarGroup>
+          <ShareAccess />
+        </Box>
+        <Comments />
       </Box>
-      <Comments />
-    </Box>
+    </>
   );
 };
 

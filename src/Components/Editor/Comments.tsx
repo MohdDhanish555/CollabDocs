@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
+  Avatar,
   Box,
   IconButton,
   InputBase,
   Paper,
   Skeleton,
+  Stack,
   Typography,
 } from "@mui/material";
-import { Send } from "@mui/icons-material";
 import { AxiosResponse } from "axios";
 import { useParams } from "react-router";
 
@@ -15,6 +16,8 @@ import { errorToastMessage } from "../../utils/toast";
 import http from "../../utils/http";
 import socket from "../../utils/socketService";
 import { useAppSelector } from "../../Redux/hooks";
+import { SendIcon } from "../Common/UI/Icons";
+import { deepPurple } from "@mui/material/colors";
 
 type CommentType = {
   id: string;
@@ -54,6 +57,10 @@ const Comments = () => {
     socket.on("commentsUpdated", (comments) => {
       setComments((prev) => [...prev, comments]);
     });
+
+    return () => {
+      socket.off("commentsUpdated");
+    };
   }, []);
 
   const addComment = async () => {
@@ -70,16 +77,12 @@ const Comments = () => {
 
   return (
     <>
-      <Box sx={{ bgcolor: "#3d52a0", p: 1, borderRadius: 2, mt: 1.5 }}>
-        <Typography variant="h6" color="#fff">
-          Comments
-        </Typography>
-      </Box>
       <Paper
         component="form"
         sx={{
           borderRadius: 2,
           mt: 2,
+          mb: "30px",
         }}
       >
         <InputBase
@@ -88,7 +91,7 @@ const Comments = () => {
           onChange={(e) => setCommentText(e.target.value)}
           fullWidth
           minRows={3}
-          placeholder="Add a comment..."
+          placeholder="Write a comment..."
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -97,28 +100,67 @@ const Comments = () => {
           }}
           sx={{ p: 2, color: "text.primary" }}
         />
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <IconButton onClick={addComment}>
-            <Send color="primary" />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            p: 1,
+          }}
+        >
+          <IconButton
+            onClick={addComment}
+            sx={{
+              borderRadius: 1,
+              bgcolor: "#161E30",
+              boxShadow: `
+                inset 0px 8px 12px 0px rgba(35, 48, 74, 0.5), 
+                0px 20px 20px -16px rgba(0, 0, 0, 0.5)
+              `,
+            }}
+          >
+            <SendIcon />
           </IconButton>
         </Box>
       </Paper>
-      <Box
+      <Paper
         sx={{
-          height: "calc(100% - 261px)",
-          overflowY: "auto",
+          height: "calc(100% - 231px)",
+          overflowY: "hidden",
+          borderRadius: 2,
+          p: "24px 20px",
+
+          ":hover": {
+            overflowY: "auto",
+          },
         }}
       >
-        {!loading ? (
-          comments?.map((comment) => (
-            <Typography key={comment?.id}>{comment?.comment}</Typography>
-          ))
-        ) : (
-          <>
-            <Skeleton />
-          </>
-        )}
-      </Box>
+        <Stack gap="36px">
+          {!loading ? (
+            comments?.map((comment) => (
+              <Box key={comment?.id}>
+                <Box sx={{ mb: "12px", display: "flex", alignItems: "center" }}>
+                  <Avatar
+                    sx={{ width: 24, height: 24, bgcolor: deepPurple[500] }}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    bgcolor: "#12213B",
+                    p: "10px 14px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <Typography>{comment?.comment}</Typography>
+                </Box>
+              </Box>
+            ))
+          ) : (
+            <>
+              <Skeleton />
+            </>
+          )}
+        </Stack>
+      </Paper>
     </>
   );
 };

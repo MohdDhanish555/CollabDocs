@@ -18,13 +18,13 @@ export const theme = createTheme({
   },
   palette: {
     primary: { main: "#181c62" },
-    secondary: { main: "#dc004e" },
+    secondary: { main: "#151E2F" },
     error: { main: "#f44336" },
     warning: { main: "#ff9800" },
     info: { main: "#2196f3" },
     success: { main: "#4caf50" },
-    background: { default: "#f5f5f5" },
-    text: { primary: "#212121", secondary: "#757575", disabled: "#9e9e9e" },
+    background: { default: "#09111F", paper: "#0B1527" },
+    text: { primary: "#fff", secondary: "#B4C6EE", disabled: "#9e9e9e" },
   },
   components: {
     MuiButton: {
@@ -32,6 +32,23 @@ export const theme = createTheme({
         root: {
           borderRadius: "8px",
           textTransform: "none",
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          color: "#fff",
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          fieldset: {
+            border: "1px solid #2E3D5B",
+            borderRadius: "8px",
+          },
         },
       },
     },

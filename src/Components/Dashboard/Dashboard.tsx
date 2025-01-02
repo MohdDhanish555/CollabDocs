@@ -5,7 +5,7 @@ import Documents from "./Documents/Documents";
 
 const Dashboard = () => {
   return (
-    <Container sx={{ height: "100%" }}>
+    <Container sx={{ height: "100%", pt: 3 }}>
       <DashboardHeader />
       <Documents />
     </Container>

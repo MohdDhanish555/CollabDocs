@@ -29,7 +29,6 @@ const DocumentHeader = () => {
         height: "70px",
         display: "flex",
         alignItems: "center",
-        pt: 2,
         pb: 4,
       }}
     >
