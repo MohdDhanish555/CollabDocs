@@ -78,6 +78,7 @@ export class DocumentGateway {
       this.activeUsers.get(documentId)?.delete(userId);
     }
     this.broadcastActiveUsers(documentId);
+    this.server.emit("userDisconnected", { userId });
   }
 
   private broadcastActiveUsers(documentId: string) {
@@ -104,5 +105,20 @@ export class DocumentGateway {
     );
 
     this.server.to(documentId).emit("commentsUpdated", newComment);
+  }
+
+  @SubscribeMessage("cursorMoved")
+  handleCursorMoved(
+    @MessageBody()
+    data: {
+      documentId: string;
+      userId: string;
+      position: { x: number; y: number };
+    },
+    @ConnectedSocket() client: Socket
+  ) {
+    const { documentId, userId, position } = data;
+
+    client.to(documentId).emit("updateCursor", { userId, position });
   }
 }
