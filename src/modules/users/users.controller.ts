@@ -9,6 +9,7 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
+  Req,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -16,7 +17,9 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { Public } from "src/decorators/public.decorator";
 import { ResponseMessage } from "src/decorators/responseMessage.decorator";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller("users")
 export class UsersController {
@@ -34,6 +37,12 @@ export class UsersController {
   @Get()
   async findAll() {
     return await this.usersService.findAll();
+  }
+
+  @ResponseMessage("users.GET_PROFILE")
+  @Get("/profile")
+  async profile(@Req() req: any) {
+    return this.usersService.findById(req.user.userId);
   }
 
   @Get(":id")

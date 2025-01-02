@@ -4,6 +4,7 @@ import {
   Column,
   DataType,
   Default,
+  HasMany,
   Model,
   NotNull,
   PrimaryKey,
@@ -12,6 +13,9 @@ import {
 } from "sequelize-typescript";
 import * as bcrypt from "bcrypt";
 import { v4 as UUID } from "uuid";
+import { Document } from "src/modules/documents/entities/document.entity";
+import { Collaborator } from "src/modules/documents/entities/collaborators.entity";
+import { Comments } from "src/modules/documents/entities/comments.entity";
 
 @Table({
   underscored: true,
@@ -37,6 +41,15 @@ export class User extends Model {
 
   @Column
   refreshToken: string;
+
+  @HasMany(() => Document, "authorId")
+  documents: Document[];
+
+  @HasMany(() => Collaborator, "userId")
+  collaborations: Collaborator[];
+
+  @HasMany(() => Comments, "userId")
+  comments: Comments[];
 
   @BeforeCreate
   static async setPassword(user: User) {

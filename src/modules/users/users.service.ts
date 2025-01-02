@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Op, UniqueConstraintError } from "sequelize";
@@ -35,6 +36,17 @@ export class UsersService {
     return await this.userModel.findOne({
       where: { id },
     });
+  }
+
+  async findById(id: string) {
+    const user = await this.userModel.findByPk(id);
+    if (!user) {
+      throw new UnauthorizedException("Unauthorized access");
+    }
+    return {
+      id: user.id,
+      username: user.username,
+    };
   }
 
   async findOneByUsername(username: string) {
