@@ -17,7 +17,7 @@ export const theme = createTheme({
     subtitle2: { fontSize: "1.125rem", fontWeight: 500 }, // 18px
   },
   palette: {
-    primary: { main: "#181c62" },
+    primary: { main: "#3371FF" },
     secondary: { main: "#151E2F" },
     error: { main: "#f44336" },
     warning: { main: "#ff9800" },

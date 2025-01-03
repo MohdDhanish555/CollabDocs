@@ -18,6 +18,7 @@ import socket from "../../utils/socketService";
 import { useAppSelector } from "../../Redux/hooks";
 import { SendIcon } from "../Common/UI/Icons";
 import { deepPurple } from "@mui/material/colors";
+import { RoundedButtonStyle } from "../Common/UI/IconButton";
 
 type CommentType = {
   id: string;
@@ -107,17 +108,7 @@ const Comments = () => {
             p: 1,
           }}
         >
-          <IconButton
-            onClick={addComment}
-            sx={{
-              borderRadius: 1,
-              bgcolor: "#161E30",
-              boxShadow: `
-                inset 0px 8px 12px 0px rgba(35, 48, 74, 0.5), 
-                0px 20px 20px -16px rgba(0, 0, 0, 0.5)
-              `,
-            }}
-          >
+          <IconButton onClick={addComment} sx={RoundedButtonStyle}>
             <SendIcon />
           </IconButton>
         </Box>

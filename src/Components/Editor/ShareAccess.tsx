@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FolderShared } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import AccessModal from "./AccessModal";
+import { RoundedButtonStyle } from "../Common/UI/IconButton";
 
 const ShareAccess = () => {
   const [showModal, setShowModal] = useState(false);
@@ -19,13 +20,8 @@ const ShareAccess = () => {
       <IconButton
         onClick={openModal}
         sx={{
+          ...RoundedButtonStyle,
           ml: "auto",
-          borderRadius: 1,
-          bgcolor: "#161E30",
-          boxShadow: `
-                inset 0px 8px 12px 0px rgba(35, 48, 74, 0.5), 
-                0px 20px 20px -16px rgba(0, 0, 0, 0.5)
-              `,
         }}
       >
         <FolderShared htmlColor="#fff" />
