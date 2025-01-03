@@ -1,8 +1,9 @@
-import { Box, Paper } from "@mui/material";
+import { Box } from "@mui/material";
 
 import RightPanel from "./RightPanel";
 import LiveCursors from "./LiveCursors";
 import { useState } from "react";
+import SlateEditor from "./SlateEditor/SlateEditor";
 
 export interface User {
   id: string;
@@ -15,17 +16,13 @@ const Editor = () => {
   return (
     <Box sx={{ height: "100%", px: 2, py: 3, display: "flex", gap: 2 }}>
       <Box sx={{ flex: 1, px: 4 }}>
-        <Paper
+        <Box
           sx={{
             height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "rgba(255, 255, 255, 0.15)",
           }}
         >
-          EDITOR
-        </Paper>
+          <SlateEditor />
+        </Box>
       </Box>
       <RightPanel activeUsers={activeUsers} setActiveUsers={setActiveUsers} />
       <LiveCursors activeUsers={activeUsers} />
