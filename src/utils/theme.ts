@@ -24,7 +24,10 @@ export const theme = createTheme({
     info: { main: "#2196f3" },
     success: { main: "#4caf50" },
     background: { default: "#09111F", paper: "#0B1527" },
-    text: { primary: "#fff", secondary: "#B4C6EE", disabled: "#9e9e9e" },
+    text: { primary: "#fff", secondary: "#B4C6EE" },
+    action: {
+      disabled: "rgba(255, 255, 255, 0.25)",
+    },
   },
   components: {
     MuiButton: {

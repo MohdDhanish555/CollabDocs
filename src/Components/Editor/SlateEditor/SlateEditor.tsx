@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Editable, withReact, Slate } from "slate-react";
 import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
@@ -9,19 +9,45 @@ import { CustomElement, CustomText } from "../editor.type";
 import EditorElements from "./EditorElements";
 import EditorLeaf from "./EditorLeaf";
 import { handleKeyDown } from "../../../utils/slateEditor";
+import { useParams } from "react-router";
+import socket from "../../../utils/socketService";
 
 const SlateEditor = () => {
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const { id: documentId } = useParams<{ id: string }>();
+  const [editor] = useState(() => withReact(withHistory(createEditor())));
   const [value, setValue] = useState<Descendant[]>([
     {
       type: "paragraph",
       children: [{ text: "" }],
     },
   ]);
+  const isRemoteUpdate = useRef(false);
+
+  const handleEditorChange = (newValue: Descendant[]) => {
+    if (!isRemoteUpdate.current) {
+      const operations = editor.operations.filter(
+        (operation) => operation.type !== "set_selection"
+      );
+
+      if (operations.length > 0) {
+        socket.emit("contentWrite", { documentId, operations });
+      }
+    }
+
+    isRemoteUpdate.current = false;
+    setValue(newValue);
+  };
 
   useEffect(() => {
-    console.log({ value });
-  }, [value]);
+    socket.on("contentUpdate", ({ operations }) => {
+      isRemoteUpdate.current = true;
+      operations.forEach((operation: any) => editor.apply(operation));
+    });
+
+    return () => {
+      socket.off("contentUpdate");
+    };
+  }, [editor]);
 
   const renderElement = useCallback(
     (props: { attributes: any; children: any; element: CustomElement }) => (
@@ -38,17 +64,14 @@ const SlateEditor = () => {
   );
 
   return (
-    <Slate
-      editor={editor}
-      initialValue={value}
-      onChange={(newValue) => setValue(newValue)}
-    >
+    <Slate editor={editor} initialValue={value} onChange={handleEditorChange}>
       <Toolbar />
       <Paper
         sx={{
           display: "flex",
           flexDirection: "column",
           height: "calc(100% - 64px)",
+          overflowY: "auto",
           minHeight: 300,
           px: 3,
           py: 2,
