@@ -121,4 +121,25 @@ export class DocumentGateway {
 
     client.to(documentId).emit("updateCursor", { userId, position });
   }
+
+  @SubscribeMessage("contentWrite")
+  handleDocumentUpdate(
+    @MessageBody()
+    data: { documentId: string; operations: any[] },
+    @ConnectedSocket() client: Socket
+  ) {
+    const { documentId, operations } = data;
+
+    // Broadcast the operations to other users in the document room
+    client.to(documentId).emit("contentUpdate", { operations });
+  }
+
+  @SubscribeMessage("titleUpdate")
+  handleTitleUpdate(
+    @MessageBody() data: { documentId: string; title: string },
+    @ConnectedSocket() client: Socket
+  ) {
+    const { documentId, title } = data;
+    client.to(documentId).emit("titleUpdated", { title });
+  }
 }

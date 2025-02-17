@@ -7,11 +7,12 @@ import { Document } from "./entities/document.entity";
 import { Collaborator } from "./entities/collaborators.entity";
 import { CommentsService } from "./comments.service";
 import { Comments } from "./entities/comments.entity";
+import { CollaboratorsService } from "./collaborators.service";
 
 @Module({
   imports: [SequelizeModule.forFeature([Document, Collaborator, Comments])],
   controllers: [DocumentsController],
-  providers: [DocumentsService, CommentsService],
+  providers: [DocumentsService, CommentsService, CollaboratorsService],
   exports: [CommentsService],
 })
 export class DocumentsModule {}
