@@ -7,20 +7,18 @@ import {
   ForeignKey,
   HasMany,
   Model,
-  NotNull,
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
 import { v4 as UUID } from "uuid";
-
 import { User } from "src/modules/users/entities/user.entity";
 import { Collaborator } from "./collaborators.entity";
+import { Comments } from "./comments.entity";
 
 @Table({ underscored: true })
 export class Document extends Model {
   @PrimaryKey
   @AllowNull(false)
-  @NotNull
   @Default(UUID)
   @Column(DataType.UUID)
   id: string;
@@ -34,12 +32,15 @@ export class Document extends Model {
 
   @ForeignKey(() => User)
   @AllowNull(false)
-  @NotNull
   @Column(DataType.UUID)
   authorId: string;
 
-  @BelongsTo(() => User) author: User;
+  @BelongsTo(() => User)
+  author: User;
 
   @HasMany(() => Collaborator, "documentId")
   collaborators: Collaborator[];
+
+  @HasMany(() => Comments, "documentId")
+  comments: Comments[];
 }

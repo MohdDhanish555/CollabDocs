@@ -5,7 +5,8 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { sequelizeConfig } from "./config/sequelize.config";
 import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
-import { DocumentsModule } from './modules/documents/documents.module';
+import { DocumentsModule } from "./modules/documents/documents.module";
+import { DocumentGateway } from "./websockets/document.gateway";
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { DocumentsModule } from './modules/documents/documents.module';
     DocumentsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [DocumentGateway],
 })
 export class AppModule {}

@@ -17,6 +17,7 @@ export const sequelizeConfig: SequelizeModuleAsyncOptions = {
     password: configService.get<string>("DB_PASSWORD"),
     database: configService.get<string>("DB_NAME"),
     synchronize: true,
+    logging: false,
     autoLoadModels: true,
     sync: {
       alter: true,
