@@ -23,6 +23,7 @@ const Documents = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { documents, loading } = useAppSelector((state) => state.dashboard);
+  const userId = useAppSelector((state) => state.user.userId);
   const targetRef = useRef<any>();
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const Documents = () => {
           id: doc?.id,
           title: doc?.title,
           createdAt: DateTime.fromISO(doc?.createdAt).toRelative(),
+          isOwner: doc?.authorId === userId,
         }));
 
         dispatch(setDocuments(formattedData));
@@ -45,7 +47,7 @@ const Documents = () => {
       }
     };
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   const handleNavigate = (docId: string) => {
     navigate(`/document/${docId}`);

@@ -1,92 +1,106 @@
+import React, { useEffect, useState } from "react";
 import {
-  alpha,
   Autocomplete,
   Box,
   Button,
-  FormControl,
+  Chip,
   FormLabel,
   IconButton,
-  InputBase,
   MenuItem,
   Modal,
   Select,
   SelectChangeEvent,
-  styled,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
 import { ModalBaseStyle } from "../Common/styles/modal";
-import { Cancel, ExpandMore, Search } from "@mui/icons-material";
+import { Cancel, ExpandMore, HighlightOff, Search } from "@mui/icons-material";
+import { AxiosResponse } from "axios";
+
+import {
+  SearchWrapper,
+  SearchIconWrapper,
+  StyledInputBase,
+  StyledSelectInputBase,
+} from "./editor.style";
+
+import { errorToastMessage, toastMessage } from "../../utils/toast";
+import http from "../../utils/http";
+import { useParams } from "react-router";
+import { useAppSelector } from "../../Redux/hooks";
 
 type Props = {
   showModal: boolean;
   closeModal: () => void;
 };
 
-const SearchWrapper = styled("div")(({ theme }) => ({
-  position: "relative",
-  flex: 1,
-  borderRadius: "8px",
-  backgroundColor: alpha("#27344D", 0.55),
-  "&:hover": {
-    backgroundColor: alpha("#27344D", 0.65),
-  },
-  width: "100%",
-  height: "50px",
-  [theme.breakpoints.up("sm")]: {
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  height: "50px",
-  borderRadius: "8px",
-
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    paddingRight: "120px",
-  },
-}));
-
-const StyledSelectInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  position: "absolute",
-  backgroundColor: theme.palette.background.paper,
-  top: 5,
-  right: 5,
-  height: "40px",
-  borderRadius: "8px",
-
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(0, 0, 0, 1.5),
-    width: "65px",
-    // vertical padding + font size from searchIcon
-    // paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-  },
-}));
+type User = {
+  id: string;
+  name: string;
+};
 
 const AccessModal = ({ showModal, closeModal }: Props) => {
-  const [accessLevel, setAccessLevel] = useState("view");
+  const { id: documentId } = useParams();
+  const userId = useAppSelector((state) => state.user.userId);
+
+  const [accessLevel, setAccessLevel] = useState("read");
+  const [searchLoader, setSearchLoader] = useState(true);
+  const [buttonLoader, setButtonLoader] = useState(false);
+
+  const [usersList, setUsersList] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState<any>([]);
 
   const handleLevelChange = (event: SelectChangeEvent<string>) => {
     setAccessLevel(event.target.value as string);
   };
 
+  const addCollaborators = async () => {
+    try {
+      setButtonLoader(true);
+      console.log(selectedUsers);
+      const body = {
+        collaborators: selectedUsers.map((user: User) => user.id),
+        accessLevel,
+      };
+      const res: AxiosResponse = await http.post(
+        `/documents/${documentId}/collaborators`,
+        body
+      );
+      toastMessage("success", res.data?.message);
+      setButtonLoader(false);
+    } catch (error) {
+      setButtonLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setSearchLoader(true);
+        const res: AxiosResponse = await http.get(`/users/list`);
+        const data = res.data?.data;
+        const formattedData = data
+          .map((user: any) => ({
+            id: user?.id,
+            name: user?.username,
+          }))
+          .filter((user: any) => user.id !== userId);
+
+        setUsersList(formattedData);
+        setSearchLoader(false);
+      } catch (err) {
+        errorToastMessage(err as Error);
+        setSearchLoader(false);
+      }
+    };
+    fetchData();
+  }, [setSearchLoader, userId]);
+
+  const unselectUsers = (id: string) => {
+    setSelectedUsers((prev: any) => prev.filter((u: User) => u.id !== id));
+  };
+
   return (
-    <Modal open={true} onClose={closeModal}>
+    <Modal open={showModal} onClose={closeModal}>
       <Box sx={ModalBaseStyle}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography variant="subtitle2" fontWeight="medium">
@@ -99,7 +113,7 @@ const AccessModal = ({ showModal, closeModal }: Props) => {
         <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
           Select which users can access and view this project.
         </Typography>
-        <FormControl sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%" }}>
           <FormLabel htmlFor="email">Email address</FormLabel>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <SearchWrapper>
@@ -107,14 +121,21 @@ const AccessModal = ({ showModal, closeModal }: Props) => {
                 <Search htmlColor="#fff" />
               </SearchIconWrapper>
               <Autocomplete
-                id="email"
-                disablePortal
-                options={[]}
-                sx={{ width: "100%" }}
+                // id="email"
+                multiple
+                filterOptions={(x) => x}
+                fullWidth
+                loading={searchLoader}
+                options={usersList}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                value={selectedUsers}
+                onChange={(_, newValue) => {
+                  setSelectedUsers(newValue);
+                }}
                 popupIcon={<ExpandMore htmlColor="#fff" />}
                 renderInput={(params) => (
                   <StyledInputBase
-                    fullWidth
                     ref={params.InputProps.ref}
                     inputProps={params.inputProps}
                     placeholder="Search for users…"
@@ -135,13 +156,32 @@ const AccessModal = ({ showModal, closeModal }: Props) => {
                   },
                 }}
               >
-                <MenuItem value={"view"}>can view</MenuItem>
-                <MenuItem value={"edit"}>can edit</MenuItem>
+                <MenuItem value={"read"}>can view</MenuItem>
+                <MenuItem value={"write"}>can edit</MenuItem>
               </Select>
             </SearchWrapper>
-            <Button variant="contained">Invite</Button>
+            <Button
+              variant="contained"
+              disabled={buttonLoader}
+              onClick={addCollaborators}
+            >
+              Invite
+            </Button>
           </Box>
-        </FormControl>
+          {selectedUsers.length > 0 && (
+            <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
+              {selectedUsers.map((user: User) => (
+                <Chip
+                  variant="outlined"
+                  key={user.id}
+                  label={user.name}
+                  onDelete={() => unselectUsers(user?.id)}
+                  deleteIcon={<HighlightOff />}
+                />
+              ))}
+            </Box>
+          )}
+        </Box>
       </Box>
     </Modal>
   );

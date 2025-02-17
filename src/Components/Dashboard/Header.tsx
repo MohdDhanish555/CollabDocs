@@ -44,7 +44,6 @@ const DocumentHeader = () => {
             )
           }
           variant="contained"
-          color="secondary"
         >
           Start a blank document
         </Button>

@@ -1,4 +1,4 @@
-import { Box, Fade, IconButton, SvgIconTypeMap } from "@mui/material";
+import { IconButton, SvgIconTypeMap } from "@mui/material";
 
 import { useSlate } from "slate-react";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
@@ -13,10 +13,8 @@ import {
 } from "../../../utils/slateEditor";
 import { StyledToolbar } from "../editor.style";
 import { RoundedButtonStyle } from "../../Common/UI/IconButton";
-import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { Editor } from "slate";
-import { useState } from "react";
-import { EmojiEmotions } from "@mui/icons-material";
+// import HistoryElements from "./HistoryElements";
+import EmojiElement from "./EmojiElement";
 
 const ToolbarItem = ({
   format,
@@ -61,16 +59,9 @@ const ToolbarItem = ({
 };
 
 const Toolbar = () => {
-  const editor = useSlate();
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
-  const handleEmojiClick = (emoji: EmojiClickData) => {
-    Editor.insertText(editor, emoji.emoji);
-    setShowEmojiPicker(false);
-  };
-
   return (
     <StyledToolbar>
+      {/* <HistoryElements /> */}
       {formattingOptions.map((option) => (
         <ToolbarItem
           key={option.format}
@@ -79,33 +70,7 @@ const Toolbar = () => {
           type={option.type}
         />
       ))}
-      <Box sx={{ position: "relative" }}>
-        <IconButton
-          sx={{ ...RoundedButtonStyle }}
-          onClick={() => setShowEmojiPicker((prev) => !prev)}
-        >
-          <EmojiEmotions
-            sx={{
-              color: showEmojiPicker ? "primary.main" : "text.primary",
-            }}
-          />
-        </IconButton>
-        <Fade in={showEmojiPicker}>
-          <Box
-            sx={{
-              position: "absolute",
-              zIndex: 10,
-              top: "50px",
-            }}
-          >
-            <EmojiPicker
-              onEmojiClick={handleEmojiClick}
-              skinTonesDisabled
-              previewConfig={{ showPreview: false }}
-            />
-          </Box>
-        </Fade>
-      </Box>
+      <EmojiElement />
     </StyledToolbar>
   );
 };
