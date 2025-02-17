@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Comments } from "./entities/comments.entity";
+import { User } from "../users/entities/user.entity";
 
 @Injectable()
 export class CommentsService {
@@ -9,6 +10,11 @@ export class CommentsService {
   async getCommentsByDocumentId(documentId: string) {
     return await this.commentsModel.findAll({
       where: { documentId },
+      attributes: ["id", "comment", "createdAt"],
+      include: {
+        model: User,
+        attributes: ["id", "username"],
+      },
     });
   }
 

@@ -34,7 +34,7 @@ export class UsersController {
   }
 
   @ResponseMessage("users.FIND_ALL")
-  @Get()
+  @Get("/list")
   async findAll() {
     return await this.usersService.findAll();
   }
