@@ -3,6 +3,7 @@ export type Document = {
   title: string;
   content?: string;
   createdAt: string;
+  isOwner: boolean;
 };
 
 export type DocumentCardProps = {

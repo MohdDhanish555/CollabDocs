@@ -1,6 +1,13 @@
 import React from "react";
 import { DocumentCardProps } from "./documents.type";
-import { Box, Card, CardActionArea, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  Chip,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { DocumentIcon } from "./Icons";
 
 const DocumentCard = ({ doc, handleNavigate }: DocumentCardProps) => {
@@ -26,10 +33,15 @@ const DocumentCard = ({ doc, handleNavigate }: DocumentCardProps) => {
             <Typography variant="subtitle1">
               {doc?.title || "Untitled"}
             </Typography>
-            <Typography variant="body2" color="text.disabled">
+            <Typography variant="body2" color="text.secondary">
               {doc?.createdAt}
             </Typography>
           </Stack>
+          {!doc?.isOwner && (
+            <Box sx={{ ml: "auto" }}>
+              <Chip label={"Collaborator"} color="primary" variant="outlined" />
+            </Box>
+          )}
         </Box>
       </CardActionArea>
     </Card>

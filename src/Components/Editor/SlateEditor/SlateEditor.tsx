@@ -91,4 +91,4 @@ const SlateEditor = () => {
   );
 };
 
-export default SlateEditor;
+export default React.memo(SlateEditor);

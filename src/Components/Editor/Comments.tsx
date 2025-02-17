@@ -17,12 +17,15 @@ import http from "../../utils/http";
 import socket from "../../utils/socketService";
 import { useAppSelector } from "../../Redux/hooks";
 import { SendIcon } from "../Common/UI/Icons";
-import { deepPurple } from "@mui/material/colors";
+import { deepOrange, deepPurple } from "@mui/material/colors";
 import { RoundedButtonStyle } from "../Common/UI/IconButton";
+import { DateTime } from "luxon";
 
 type CommentType = {
   id: string;
   comment: string;
+  time: string;
+  user: string;
 };
 
 const Comments = () => {
@@ -40,9 +43,11 @@ const Comments = () => {
         const res: AxiosResponse = await http.get(
           `documents/${documentId}/comments`
         );
-        const formattedData = res.data?.data?.map((item: CommentType) => ({
+        const formattedData = res.data?.data?.map((item: any) => ({
           id: item?.id,
           comment: item?.comment,
+          time: DateTime.fromISO(item?.createdAt).toRelative(),
+          user: item?.user?.username,
         }));
         setComments(formattedData);
         setLoading(false);
@@ -129,10 +134,22 @@ const Comments = () => {
           {!loading ? (
             comments?.map((comment) => (
               <Box key={comment?.id}>
-                <Box sx={{ mb: "12px", display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    mb: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                  }}
+                >
                   <Avatar
                     sx={{ width: 24, height: 24, bgcolor: deepPurple[500] }}
                   />
+                  <Typography
+                    sx={{ textTransform: "capitalize", color: deepOrange[500] }}
+                  >
+                    {comment?.user || ""}
+                  </Typography>
                 </Box>
                 <Box
                   sx={{
@@ -147,7 +164,24 @@ const Comments = () => {
             ))
           ) : (
             <>
-              <Skeleton />
+              {Array(4)
+                .fill(0)
+                .map((_, index) => (
+                  <Box key={index}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        mb: "12px",
+                      }}
+                    >
+                      <Skeleton variant="circular" width={24} height={24} />
+                      <Skeleton variant="text" width={100} />
+                    </Box>
+                    <Skeleton variant="rounded" height={44} />
+                  </Box>
+                ))}
             </>
           )}
         </Stack>

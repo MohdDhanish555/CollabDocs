@@ -3,9 +3,13 @@ import { Skeleton } from "@mui/material";
 
 const DocumentsLoader = () => {
   return (
-    <div>
-      <Skeleton />
-    </div>
+    <>
+      {Array(5)
+        .fill(0)
+        .map((_, index) => (
+          <Skeleton height={100} key={index} variant="rounded" />
+        ))}
+    </>
   );
 };
 
