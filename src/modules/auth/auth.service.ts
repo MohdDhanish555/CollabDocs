@@ -63,4 +63,10 @@ export class AuthService {
 
     return { accessToken, refreshToken };
   }
+
+  async logout(id: string) {
+    return this.usersService.update(id, {
+      refreshToken: "",
+    });
+  }
 }
