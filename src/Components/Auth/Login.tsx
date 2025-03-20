@@ -129,7 +129,14 @@ const Login = () => {
                     Login
                   </Button>
                 </Box>
-                <NavLink to="/auth/signup">Signup</NavLink>
+                <NavLink
+                  to="/auth/signup"
+                  style={{
+                    color: "#3371FF",
+                  }}
+                >
+                  Signup
+                </NavLink>
               </Stack>
             </Form>
           )}
